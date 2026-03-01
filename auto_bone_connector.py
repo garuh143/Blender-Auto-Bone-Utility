@@ -494,65 +494,6 @@ class BONE_OT_enable_all_constraints(Operator):
         return {'FINISHED'}
 
 
-class BONE_OT_add_collision_constraint(Operator):
-    """Add Limit Distance constraint for simple collision with a target object"""
-    bl_idname = "bone.add_collision_constraint"
-    bl_label = "Add Bone Collision"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    distance: FloatProperty(
-        name="Distance",
-        description="Minimum distance from collision object",
-        default=0.1,
-        min=0.001,
-        soft_max=1.0,
-        unit='LENGTH'
-    )
-
-    limit_mode: EnumProperty(
-        name="Limit Mode",
-        description="How to limit the distance",
-        items=[
-            ('LIMITDIST_OUTSIDE', "Outside", "Keep bone outside the sphere"),
-            ('LIMITDIST_INSIDE', "Inside", "Keep bone inside the sphere"),
-            ('LIMITDIST_ONSURFACE', "On Surface", "Keep bone on surface"),
-        ],
-        default='LIMITDIST_OUTSIDE'
-    )
-
-    @classmethod
-    def poll(cls, context):
-        if context.mode != 'POSE':
-            return False
-        if len(context.selected_pose_bones) < 1:
-            return False
-        # Need an active object as collision target
-        if context.active_object is None:
-            return False
-        return True
-
-    def execute(self, context):
-        collision_target = context.active_object
-        selected_bones = context.selected_pose_bones
-
-        added_count = 0
-        for pose_bone in selected_bones:
-            # Skip if bone is the target itself
-            if pose_bone.id_data == collision_target:
-                continue
-
-            constraint = pose_bone.constraints.new('LIMIT_DISTANCE')
-            constraint.target = collision_target
-            constraint.distance = self.distance
-            constraint.limit_mode = self.limit_mode
-            constraint.use_transform_limit = True
-            constraint.name = "Collision Limit"
-            added_count += 1
-
-        self.report({'INFO'}, "Added %d collision constraints targeting '%s'" % (added_count, collision_target.name))
-        return {'FINISHED'}
-
-
 class BONE_OT_setup_spline_ik_hair(Operator):
     """Setup Spline IK with Soft Body for hair collision (select curve then bones)"""
     bl_idname = "bone.setup_spline_ik_hair"
@@ -623,14 +564,6 @@ class BONE_PT_auto_connector_panel(Panel):
 
             layout.separator()
 
-            box2 = layout.box()
-            box2.label(text="Chain Operations:", icon='CONSTRAINT_BONE')
-            col2 = box2.column(align=True)
-            col2.operator("bone.connect_chain", text="Chain (Keep Offset)").keep_offset = True
-            col2.operator("bone.connect_chain", text="Chain (Connected)").keep_offset = False
-
-            layout.separator()
-
             box3 = layout.box()
             box3.label(text="Auto Connect (for unparented):", icon='MODIFIER')
             col3 = box3.column(align=True)
@@ -676,20 +609,8 @@ class BONE_PT_auto_connector_panel(Panel):
             box2.label(text="Performance:", icon='HIDE_ON')
             col2 = box2.column(align=True)
             col2.operator("bone.toggle_damp_track", text="Toggle Damp Track")
-            col2.operator("bone.disable_all_constraints", text="Disable All (Fast)")
-            col2.operator("bone.enable_all_constraints", text="Enable All (Normal)")
-
-            layout.separator()
-
-            # Collision section
-            box3 = layout.box()
-            box3.label(text="Collision:", icon='MOD_PHYSICS')
-            col3 = box3.column(align=True)
-            col3.label(text="Select obj + bones:")
-            col3.operator("bone.add_collision_constraint", text="Add Collision Sphere")
-            col3.separator()
-            col3.label(text="Select curve + bones:")
-            col3.operator("bone.setup_spline_ik_hair", text="Setup Spline IK")
+            col2.operator("bone.disable_all_constraints", text="Disable All")
+            col2.operator("bone.enable_all_constraints", text="Enable All")
 
         else:
             layout.label(text="Switch to Edit or Pose Mode", icon='INFO')
@@ -697,7 +618,6 @@ class BONE_PT_auto_connector_panel(Panel):
 
 classes = (
     BONE_OT_connect_to_active,
-    BONE_OT_connect_chain,
     BONE_OT_disconnect_bones,
     BONE_OT_connect_by_distance,
     BONE_OT_clear_parent_all,
@@ -707,8 +627,6 @@ classes = (
     BONE_OT_toggle_damp_track,
     BONE_OT_disable_all_constraints,
     BONE_OT_enable_all_constraints,
-    BONE_OT_add_collision_constraint,
-    BONE_OT_setup_spline_ik_hair,
     BONE_PT_auto_connector_panel,
 )
 

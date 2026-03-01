@@ -57,13 +57,13 @@ Access all tools in the 3D Viewport sidebar (**N** panel) under the **Bone Tools
 3. Connected bones switch to Keep Offset, and vice versa
 
 **Demo:**
-```
+
 
 
 https://github.com/user-attachments/assets/c952246e-88c3-437f-be11-dc90c5a7f731
 
 
-```
+
 
 #### Disconnect/Clear Parent
 - **Disconnect Only**: Keep parent but disconnect physical connection
@@ -81,13 +81,13 @@ https://github.com/user-attachments/assets/c952246e-88c3-437f-be11-dc90c5a7f731
 3. Click **Add Damp Track Chain**
 
 **Demo:**
-```
+
 
 
 https://github.com/user-attachments/assets/4739c2f6-7f89-4845-9682-ee7964ca8e74
 
 
-```
+
 
 4. Use **Toggle Damp Track** to temporarily disable for better playback performance
 5. Use **Remove Damp Track** to delete all Damped Track constraints

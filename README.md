@@ -73,9 +73,6 @@ Access all tools in the 3D Viewport sidebar (**N** panel) under the **Bone Tools
 - **Naming**: Bones are sorted alphabetically for chain operations — consistent naming helps predictable results
 - **Influence Curves**: Set root influence low (0.1) and tip high (1.0) for natural follow-through on tails, hair, or cables
 
-## License
-
-[Your License Here] — e.g., MIT, GPL, etc.
 
 ## Author
 

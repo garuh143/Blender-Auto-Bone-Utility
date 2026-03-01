@@ -60,7 +60,7 @@ Access all tools in the 3D Viewport sidebar (**N** panel) under the **Bone Tools
 ```
 
 
-https://github.com/user-attachments/assets/d606feb3-f041-492d-bdfc-248e9312cb8d
+https://github.com/user-attachments/assets/c952246e-88c3-437f-be11-dc90c5a7f731
 
 
 ```
@@ -84,7 +84,7 @@ https://github.com/user-attachments/assets/d606feb3-f041-492d-bdfc-248e9312cb8d
 ```
 
 
-https://github.com/user-attachments/assets/bc3314aa-4e0a-4d1b-99b1-2f467438a255
+https://github.com/user-attachments/assets/4739c2f6-7f89-4845-9682-ee7964ca8e74
 
 
 ```

@@ -22,9 +22,9 @@ A Blender addon for streamlined bone rigging with intelligent connection tools, 
 
 ## Installation
 
-1. Download the latest release as a ZIP file
+1. Download the latest release python file
 2. In Blender, go to **Edit > Preferences > Add-ons > Install...**
-3. Select the downloaded ZIP file
+3. Select the downloaded python file
 4. Enable the addon by checking the checkbox
 
 ## Requirements

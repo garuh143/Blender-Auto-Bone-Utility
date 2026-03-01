@@ -16,9 +16,8 @@ A Blender addon for streamlined bone rigging with intelligent connection tools, 
 ### Pose Mode Tools
 - **Auto Damp Track Chain** — Add Damped Track constraints for automatic follow-through animation:
   - Gradient influence from root to tip
-  - Two modes: track immediate child or track chain tip
+  - track immediate child 
   - Configurable influence values and track axis
-  - Now handles branching chains correctly
 - **Performance Controls** — Toggle constraints on/off to speed up viewport playback
 
 ## Installation
@@ -52,15 +51,19 @@ Access all tools in the 3D Viewport sidebar (**N** panel) under the **Bone Tools
 2. Click **Auto by Distance**
 3. Bones will automatically parent to their nearest neighbor within the threshold
 
-**Demo:**
-```
-[Demo: Auto Connect by Distance - bones automatically connecting]
-```
-
 #### Toggle Between Modes
 1. Select already-parented bones
 2. Click **Toggle Connect/Offset**
 3. Connected bones switch to Keep Offset, and vice versa
+
+**Demo:**
+```
+
+
+https://github.com/user-attachments/assets/d606feb3-f041-492d-bdfc-248e9312cb8d
+
+
+```
 
 #### Disconnect/Clear Parent
 - **Disconnect Only**: Keep parent but disconnect physical connection
@@ -79,15 +82,19 @@ Access all tools in the 3D Viewport sidebar (**N** panel) under the **Bone Tools
 
 **Demo:**
 ```
-[Demo: Damp Track Chain - bones following through with gradient influence]
+
+
+https://github.com/user-attachments/assets/bc3314aa-4e0a-4d1b-99b1-2f467438a255
+
+
 ```
 
 4. Use **Toggle Damp Track** to temporarily disable for better playback performance
 5. Use **Remove Damp Track** to delete all Damped Track constraints
 
 #### Performance Optimization
-- **Disable All (Fast)**: Mute all constraints for maximum viewport performance
-- **Enable All (Normal)**: Re-enable all constraints for animation playback
+- **Disable All**: Mute all constraints for maximum viewport performance
+- **Enable All**: Re-enable all constraints for animation playback
 
 ## Tips
 
@@ -112,5 +119,5 @@ Access all tools in the 3D Viewport sidebar (**N** panel) under the **Bone Tools
 **Garuh143**
 
 ---
-
+This is a free hobby project.
 Contributions and feedback welcome!

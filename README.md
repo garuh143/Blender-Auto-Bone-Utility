@@ -46,10 +46,16 @@ Access all tools in the 3D Viewport sidebar (**N** panel) under the **Bone Tools
    - Click **Connected** to snap bones together
    - Click **Tail to Head** to move parent tail to child
 
+
 #### Auto Connect by Distance
 1. Select multiple bones in Edit Mode
 2. Click **Auto by Distance**
 3. Bones will automatically parent to their nearest neighbor within the threshold
+
+**Demo:**
+```
+[Demo: Auto Connect by Distance - bones automatically connecting]
+```
 
 #### Toggle Between Modes
 1. Select already-parented bones
@@ -70,6 +76,12 @@ Access all tools in the 3D Viewport sidebar (**N** panel) under the **Bone Tools
    - **Tip Influence**: Set how strongly the tip follows (0 = rigid, 1 = full follow)
    - **Axis**: Which bone axis points toward the target
 3. Click **Add Damp Track Chain**
+
+**Demo:**
+```
+[Demo: Damp Track Chain - bones following through with gradient influence]
+```
+
 4. Use **Toggle Damp Track** to temporarily disable for better playback performance
 5. Use **Remove Damp Track** to delete all Damped Track constraints
 

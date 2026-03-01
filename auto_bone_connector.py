@@ -9,7 +9,7 @@ bl_info = {
 }
 
 import bpy
-from bpy.props import BoolProperty, EnumProperty, FloatProperty
+from bpy.props import BoolProperty, EnumProperty, FloatProperty, IntProperty
 from bpy.types import Panel, Operator
 
 
@@ -140,7 +140,7 @@ class BONE_OT_connect_by_distance(Operator):
         description="Maximum distance to consider for parenting",
         default=0.1,
         min=0.001,
-        soft_max=1000.0,
+        soft_max=1.0,
         unit='LENGTH'
     )
 
@@ -183,6 +183,63 @@ class BONE_OT_connect_by_distance(Operator):
 
         mode_str = "connected" if self.use_connect else "keep offset"
         self.report({'INFO'}, "Parented %d bones (%s)" % (connected_count, mode_str))
+        return {'FINISHED'}
+
+
+class BONE_OT_clear_parent_all(Operator):
+    """Clear parent for all selected bones"""
+    bl_idname = "bone.clear_parent_all"
+    bl_label = "Clear Parent All"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        if context.mode != 'EDIT_ARMATURE':
+            return False
+        if len(context.selected_bones) == 0:
+            return False
+        return True
+
+    def execute(self, context):
+        count = 0
+        for bone in context.selected_bones:
+            if bone.parent is not None:
+                bone.parent = None
+                bone.use_connect = False
+                count += 1
+
+        self.report({'INFO'}, "Cleared parent for %d bone(s)" % count)
+        return {'FINISHED'}
+
+
+class BONE_OT_toggle_connect_mode(Operator):
+    """Toggle selected bones between Connected and Keep Offset modes"""
+    bl_idname = "bone.toggle_connect_mode"
+    bl_label = "Toggle Connect/Offset"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        if context.mode != 'EDIT_ARMATURE':
+            return False
+        if len(context.selected_bones) == 0:
+            return False
+        return True
+
+    def execute(self, context):
+        count_connected = 0
+        count_offset = 0
+
+        for bone in context.selected_bones:
+            if bone.parent is not None:
+                if bone.use_connect:
+                    bone.use_connect = False
+                    count_offset += 1
+                else:
+                    bone.use_connect = True
+                    count_connected += 1
+
+        self.report({'INFO'}, "Connected: %d | Offset: %d" % (count_connected, count_offset))
         return {'FINISHED'}
 
 
@@ -232,6 +289,31 @@ class BONE_OT_auto_damp_track(Operator):
                 current = next_bone
             if len(chain) >= 2:
                 chains.append(chain)
+
+        # Also check for sub-chains starting from non-root bones
+        # (handles cases where parent is in selection but offset)
+        for bone in selected_bones:
+            if bone in roots:
+                continue
+            # Check if this bone has children in the selection
+            has_child = any(b.parent == bone for b in selected_bones)
+            if has_child:
+                # Build chain starting from this bone
+                chain = []
+                current = bone
+                while current and current in selected_bones:
+                    if current in chain:  # Avoid cycles
+                        break
+                    chain.append(current)
+                    # Find child
+                    next_bone = None
+                    for b in selected_bones:
+                        if b.parent == current:
+                            next_bone = b
+                            break
+                    current = next_bone
+                if len(chain) >= 2 and chain not in chains:
+                    chains.append(chain)
 
         # If no valid chains found, fall back to treating all as one chain
         if not chains:
@@ -477,7 +559,7 @@ class BONE_OT_setup_spline_ik_hair(Operator):
     bl_label = "Setup Spline IK Hair"
     bl_options = {'REGISTER', 'UNDO'}
 
-    chain_count: bpy.props.IntProperty(
+    chain_count: IntProperty(
         name="Chain Length",
         description="Number of bones in the spline IK chain",
         default=4,
@@ -550,17 +632,24 @@ class BONE_PT_auto_connector_panel(Panel):
             layout.separator()
 
             box3 = layout.box()
-            box3.label(text="Auto Connect:", icon='MODIFIER')
+            box3.label(text="Auto Connect (for unparented):", icon='MODIFIER')
             col3 = box3.column(align=True)
-            col3.operator("bone.connect_by_distance", text="Auto by Distance")
+            col3.operator("bone.connect_by_distance", text="Auto by Distance").use_connect = True
 
             layout.separator()
 
             box4 = layout.box()
-            box4.label(text="Disconnect:", icon='X')
+            box4.label(text="Change Mode (for parented):", icon='ARROW_LEFTRIGHT')
             col4 = box4.column(align=True)
-            col4.operator("bone.disconnect_bones", text="Disconnect Only").clear_parent = False
-            col4.operator("bone.disconnect_bones", text="Clear Parent").clear_parent = True
+            col4.operator("bone.toggle_connect_mode", text="Toggle Connect/Offset")
+
+            layout.separator()
+
+            box5 = layout.box()
+            box5.label(text="Disconnect:", icon='X')
+            col5 = box5.column(align=True)
+            col5.operator("bone.disconnect_bones", text="Disconnect Only").clear_parent = False
+            col5.operator("bone.clear_parent_all", text="Clear Parent All")
 
         elif context.mode == 'POSE':
             box = layout.box()
@@ -611,6 +700,8 @@ classes = (
     BONE_OT_connect_chain,
     BONE_OT_disconnect_bones,
     BONE_OT_connect_by_distance,
+    BONE_OT_clear_parent_all,
+    BONE_OT_toggle_connect_mode,
     BONE_OT_auto_damp_track,
     BONE_OT_remove_damp_track,
     BONE_OT_toggle_damp_track,
